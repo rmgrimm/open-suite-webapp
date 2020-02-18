@@ -1,0 +1,24 @@
+{{- if .Values.argodeploys }}
+{{- range $key := .Values.argodeploys }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: {{ $.Values.app_name }}-{{ .env }}
+  namespace: {{ $.Values.cicd_namespace }}
+spec:
+  destination:
+    namespace: {{ .namespace }}
+    server: {{ .server | default "https://kubernetes.default.svc" }}
+  project: {{ .project | default "default" }}
+  source:
+    helm:
+      releaseName: {{ .releasename | default $.Values.app_name }}
+      values: {{- toYaml .values | indent 6 }}
+    path: charts/pricing-data-service
+    repoURL: {{ .repoUrl }}
+    targetRevision: {{ .targetRevision | default "master" }}
+{{- end }}
+{{- end }}

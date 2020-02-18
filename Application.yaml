@@ -1,0 +1,20 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: open-suite-webapp-bootstrap
+spec:
+  destination:
+    namespace: honda-labs-ci-cd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      releaseName: open-suite-webapp
+      valueFiles:
+      - bootstrap-values.yaml
+    path: charts/open-suite-webapp
+    repoURL: https://github.com/honda-lde/open-suite-webapp.git
+    targetRevision: master
