@@ -17,8 +17,8 @@ codeready:
 	sed -i -E \
 		's#^(db.default.url[[:blank:]]*=[[:blank:]]*).*#\1jdbc:postgresql://axelor-postgres-crw/axelor#' \
 		src/main/resources/application.properties && \
-		./gradlew clean build && \
-		./gradlew run
+		gradle clean build && \
+		gradle run
 
 dev:
 	docker pull postgres && \
