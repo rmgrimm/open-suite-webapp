@@ -10,7 +10,7 @@ retriever: modernSCM(
 openshift.withCluster() {
 
   env.NAMESPACE = openshift.project()
-  env.APP_NAME = "open-suite-webapp"
+  env.APP_NAME = "${env.APP_NAME}"
   env.BUILD = "${env.NAMESPACE}"
   env.DEV = env.BUILD.replace('labs-ci-cd', 'dev')
   env.TEST = env.BUILD.replace('labs-ci-cd', 'test')

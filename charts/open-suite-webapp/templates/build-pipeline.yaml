@@ -23,6 +23,9 @@ spec:
     type: "JenkinsPipeline"
     jenkinsPipelineStrategy:
       jenkinsfilePath: {{ .Values.build.pipeline_script | default "Jenkinsfile" | quote }}
+      env:
+        - name: APP_NAME 
+          value: "{{ .Values.app_name }}"
 status:
   lastVersion: 0
 {{- end }}
