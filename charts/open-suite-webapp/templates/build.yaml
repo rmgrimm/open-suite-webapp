@@ -13,7 +13,7 @@ spec:
   source:
     binary: {}
     type: Binary
-	strategy:
+  strategy:
     type: Source
     sourceStrategy:
       from:
