@@ -11,9 +11,6 @@ imagestreams:
   - namespace: honda-test
 
 build:
-  secret_name: "github-auth"
-  trigger_type: "GitHub"
-  source_repo: "https://github.com/honda-lde/open-suite-webapp.git"
   builder_image_name: "java"
   builder_image_tag: "8"
 

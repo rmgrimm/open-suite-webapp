@@ -3,25 +3,17 @@
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: "{{ .Values.app_name}}"
+  name: "{{ .Values.app_name }}"
   namespace: "{{ .Values.cicd_namespace }}"
 spec:
   nodeSelector: {}
   runPolicy: {{ .Values.build.run_policy | default "Serial" | quote }}
   triggers:
-    - type: "{{ .Values.build.trigger_type }}"
-      {{ .Values.build.trigger_type | lower }}:
-        secret: "{{ .Values.build.secret_name }}"
     - type: "ImageChange"
   source:
-    contextDir: {{ .Values.build.source_context_dir | default "" | quote }}
-    git:
-      uri: "{{ .Values.build.source_repo }}"
-      ref: {{ .Values.build.source_repo_ref | default "master" | quote }}
-    sourceSecret:
-      name: "{{ .Values.build.secret_name }}"
-    type: Git
-  strategy:
+    binary: {}
+    type: Binary
+	strategy:
     type: Source
     sourceStrategy:
       from:

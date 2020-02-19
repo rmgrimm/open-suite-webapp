@@ -27,13 +27,13 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh "docker build -t jenkins-slave-gradle"
+        sh "./gradlew build"
       }
     }
 
     stage('Bake'){
       steps {
-        binaryBuild(projectName: env.BUILD, buildConfigName: env.APP_NAME, buildFromPath: "target/")
+        binaryBuild(projectName: env.BUILD, buildConfigName: env.APP_NAME, buildFromPath: "build/")
       }
     }
 
