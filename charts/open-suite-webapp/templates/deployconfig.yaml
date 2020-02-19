@@ -20,8 +20,6 @@ spec:
     spec:
       containers:
       - env:
-        - name: SPRING_APPLICATION_JSON
-          value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
         - name: DCDBPOSTGRESQL_SERVICE_HOST
           value: "{{ .db_service_name }}"
         - name: "DC_POSTGRESQL_DB"

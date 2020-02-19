@@ -1,6 +1,6 @@
 # Declare variables to be passed into your templates.
 
-app_name: "open-suite-webapp"
+app_name: "honda-lde-webapp"
 cicd_namespace: "honda-labs-ci-cd"
 dev_namespace: "honda-dev"
 test_namespace: "honda-test"
@@ -23,18 +23,18 @@ argodeploys:
     namespace: honda-dev
     targetRevision: master
     values: |
-      app_name: open-suite-webapp
+      app_name: honda-lde-webapp
       deploymentconfigs:
         - namespace: honda-dev
           replicas: 1
-          db_service_name: postgresql
+          db_service_name: axelor-postgres-db
   - env: test
     repoUrl: https://github.com/honda-lde/open-suite-webapp.git
     namespace: honda-test
     targetRevision: master
     values: |
-      app_name: open-suite-webapp
+      app_name: honda-lde-webapp
       deploymentconfigs:
         - namespace: honda-test
           replicas: 1
-          db_service_name: postgresql
+          db_service_name: axelor-postgres-db
