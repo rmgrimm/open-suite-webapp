@@ -1,0 +1,62 @@
+{{- if .Values.deploymentconfigs }}
+{{- range .Values.deploymentconfigs }}
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: {{ $.Values.app_name }}
+  namespace: "{{ .namespace }}"
+spec:
+  replicas: {{ .replicas | default "1" }}
+  selector:
+    deploymentConfig: "{{ $.Values.app_name }}"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        deploymentConfig: "{{ $.Values.app_name }}"
+      name: "{{ $.Values.app_name }}"
+    spec:
+      containers:
+      - env:
+        - name: DCDBPOSTGRESQL_SERVICE_HOST
+          value: "{{ .db_service_name }}"
+        - name: "DC_POSTGRESQL_DB"
+          valueFrom:
+            secretKeyRef:
+              name: "{{ $.Values.app_name }}-db-creds"
+              key: database-name
+        - name: "DC_POSTGRESQL_USER"
+          valueFrom:
+            secretKeyRef:
+              name: "{{ $.Values.app_name }}-db-creds"
+              key: database-user
+        - name: "DC_POSTGRESQL_PW"
+          valueFrom:
+            secretKeyRef:
+              name: "{{ $.Values.app_name }}-db-creds"
+              key: database-password
+        image: "{{ $.Values.app_name }}"
+        imagePullPolicy: Always
+        name: "{{ $.Values.app_name }}"
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8081
+          name: mgmt
+          protocol: TCP
+      terminationGracePeriodSeconds: 60
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - "{{ $.Values.app_name }}"
+      from:
+        kind: ImageStreamTag
+        name: "{{ $.Values.app_name }}:latest"
+    type: ImageChange
+  - type: ConfigChange
+{{- end }}
+{{- end }}

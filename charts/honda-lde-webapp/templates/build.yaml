@@ -1,0 +1,29 @@
+{{- if .Values.build }}
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "{{ .Values.app_name }}"
+  namespace: "{{ .Values.cicd_namespace }}"
+spec:
+  nodeSelector: {}
+  runPolicy: {{ .Values.build.run_policy | default "Serial" | quote }}
+  triggers:
+    - type: "ImageChange"
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: "ImageStreamTag"
+        name: "{{ .Values.build.builder_image_name }}:{{ .Values.build.builder_image_tag }}"
+        namespace: {{ .Values.build.builder_image_namespace | default "openshift" | quote }}
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "{{ .Values.app_name }}:latest"
+status:
+  lastVersion: 0
+{{- end }}

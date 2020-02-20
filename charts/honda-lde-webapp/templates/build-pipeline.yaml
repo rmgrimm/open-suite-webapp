@@ -1,0 +1,35 @@
+{{- if .Values.build }}
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
+metadata:
+  name: "{{ .Values.app_name }}-pipeline"
+  namespace: "{{ .Values.cicd_namespace }}"
+spec:
+  nodeSelector: {}
+  source:
+    type: Git
+    sourceSecret:
+      name: "{{ .Values.build.secret_name }}"
+    git:
+      uri: "{{ .Values.build.source_repo }}"
+      ref: {{ .Values.build.source_repo_ref | default "master" | quote }}
+    contextDir: {{ .Values.build.source_context_dir | default "" | quote }}
+  triggers:
+  - type: "{{ .Values.build.trigger_type }}"
+    {{ .Values.build.trigger_type | lower }}:
+      secret: {{ .Values.build.secret_name }}
+  - type: "ConfigChange"
+  strategy:
+    type: "JenkinsPipeline"
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: {{ .Values.build.pipeline_script | default "Jenkinsfile" | quote }}
+      env:
+        - name: APP_NAME 
+          value: "{{ .Values.app_name }}"
+        - name: DEV
+          value: "{{ .Values.dev_namespace }}"
+        - name: TEST
+          value: "{{ .Values.test_namespace }}"
+status:
+  lastVersion: 0
+{{- end }}
