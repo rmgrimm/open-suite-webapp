@@ -17,7 +17,7 @@ spec:
     helm:
       releaseName: {{ .releasename | default $.Values.app_name }}
       values: {{- toYaml .values | indent 6 }}
-    path: charts/pricing-data-service
+    path: charts/{{ $.Values.app_name }}
     repoURL: {{ .repoUrl }}
     targetRevision: {{ .targetRevision | default "master" }}
 {{- end }}

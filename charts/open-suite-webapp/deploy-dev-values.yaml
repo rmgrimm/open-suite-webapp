@@ -1,7 +1,0 @@
-# Declare variables to be passed into your templates.
-
-app_name: honda-lde-webapp
-deploymentconfigs:
-  - namespace: honda-dev
-    replicas: 1
-    db_service_name: axelor-postgres-db
