@@ -43,12 +43,13 @@ pipeline {
 	  sh 'cd charts/${APP_NAME} && helm template . -f deploy-dev-values.yaml | oc apply -n ${DEV} -f -'
         }
       }
-    }
+
 
     stage('Deploy to Dev'){
       steps {
         tagImage(sourceImageName: env.APP_NAME, sourceImagePath: env.BUILD, toImagePath: env.DEV)
       }
     }
+  }
 }
 
