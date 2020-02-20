@@ -50,5 +50,5 @@ pipeline {
         tagImage(sourceImageName: env.APP_NAME, sourceImagePath: env.BUILD, toImagePath: env.DEV)
       }
     }
-  }
 }
+
