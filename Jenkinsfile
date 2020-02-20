@@ -12,8 +12,8 @@ openshift.withCluster() {
   env.NAMESPACE = openshift.project()
   env.APP_NAME = "${env.APP_NAME}"
   env.BUILD = "${env.NAMESPACE}"
-  env.DEV = env.BUILD.replace('labs-ci-cd', 'dev')
-  env.TEST = env.BUILD.replace('labs-ci-cd', 'test')
+  env.DEV = "${env.DEV}"
+  env.TEST = "${env.TEST}"
 
   echo "Starting Pipeline for ${APP_NAME}..."
 
@@ -40,9 +40,7 @@ pipeline {
     stage('Sync changes to Dev'){
       agent { label 'jenkins-slave-argocd' }
       steps {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'honda-labs-ci-cd-argo-auth', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]){
-            sh 'argocd login argo-cd-argocd-server-honda-labs-ci-cd.apps.honda-lde.rht-labs.com:443 --grpc-web --config /tmp/.argo --username $USERNAME --password $PASSWORD'
-            sh 'argocd app sync ${APP_NAME}-dev --config /tmp/.argo'
+	  sh 'cd charts/${APP_NAME} && helm template . -f deploy-dev-values.yaml | oc apply -n ${DEV} -f -'
         }
       }
     }

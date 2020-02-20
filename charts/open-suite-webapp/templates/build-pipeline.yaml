@@ -26,6 +26,10 @@ spec:
       env:
         - name: APP_NAME 
           value: "{{ .Values.app_name }}"
+        - name: DEV
+          value: "{{ .Values.dev_namespace }}"
+        - name: TEST
+          value: "{{ .Values.test_namespace }}"
 status:
   lastVersion: 0
 {{- end }}
