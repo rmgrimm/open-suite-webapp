@@ -38,7 +38,7 @@ pipeline {
     }
 
     stage('Sync changes to Dev'){
-      agent { label 'jenkins-slave-argocd' }
+      agent { label 'jenkins-slave-gradle' }
       steps {
 	  sh 'cd charts/${APP_NAME} && helm template . -f deploy-dev-values.yaml | oc apply -n ${DEV} -f -'
         }
