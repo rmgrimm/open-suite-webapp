@@ -9,17 +9,17 @@ deploymentconfigs:
       - name: "DC_POSTGRESQL_DB"
         valueFrom:
          secretKeyRef:
-           name: axelor-postgres-db-creds
+           name: honda-lde-webapp-creds
            key: database-name
       - name: "DC_POSTGRESQL_USER"
         valueFrom:
           secretKeyRef:
-            name: "axelor-postgres-db-creds"
+            name: "honda-lde-webapp-creds"
             key: database-user
       - name: "DC_POSTGRESQL_PWD"
         valueFrom:
           secretKeyRef:
-            name: "axelor-postgres-db-creds"
+            name: "honda-lde-webapp-creds"
             key: database-password
       - name: SPRING_APPLICATION_JSON
         value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
@@ -42,17 +42,17 @@ deploymentconfigs:
       - name: POSTGRESQL_USER
         valueFrom:
           secretKeyRef:
-            name: axelor-postgres-db-creds
+            name: honda-lde-webapp-creds
             key: database-user
       - name: POSTGRESQL_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: axelor-postgres-db-creds
+            name: honda-lde-webapp-creds
             key: database-password
       - name: POSTGRESQL_DATABASE
         valueFrom:
           secretKeyRef:
-            name: axelor-postgres-db-creds
+            name: honda-lde-webapp-creds
             key: database-name
     ports:
       - containerPort: 5432
