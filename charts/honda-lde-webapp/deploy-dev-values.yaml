@@ -1,7 +1,61 @@
-# Declare variables to be passed into your templates.
+ # Declare variables to be passed into your templates.
 
 app_name: honda-lde-webapp
 deploymentconfigs:
   - namespace: honda-dev
     replicas: 1
     db_service_name: axelor-postgres-db
+    env_vars:
+      - name: "DC_POSTGRESQL_DB"
+        valueFrom:
+         secretKeyRef:
+           name: axelor-postgres-db-creds
+           key: database-name
+      - name: "DC_POSTGRESQL_USER"
+        valueFrom:
+          secretKeyRef:
+            name: "axelor-postgres-db-creds"
+            key: database-user
+      - name: "DC_POSTGRESQL_PWD"
+        valueFrom:
+          secretKeyRef:
+            name: "axelor-postgres-db-creds"
+            key: database-password
+      - name: SPRING_APPLICATION_JSON
+        value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+      - name: DCDBPOSTGRESQL_SERVICE_HOST
+        value: "axelor-service-db"
+    ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8081
+          name: 8081i
+          protocol: TCP
+    image_version: "latest"
+  - namespace: honda-dev
+    name: axelor-service-db
+    replicas: 1
+    env_vars:
+      - name: PGCTLTIMEOUT
+        value: "300"
+      - name: POSTGRESQL_USER
+        valueFrom:
+          secretKeyRef:
+            name: axelor-postgres-db-creds
+            key: database-user
+      - name: POSTGRESQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: axelor-postgres-db-creds
+            key: database-password
+      - name: POSTGRESQL_DATABASE
+        valueFrom:
+          secretKeyRef:
+            name: axelor-postgres-db-creds
+            key: database-name
+    ports:
+      - containerPort: 5432
+        protocol: TCP
+        name: pg
+    image_version: "latest"
