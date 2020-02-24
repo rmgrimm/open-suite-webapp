@@ -39,3 +39,13 @@ argodeploys:
         - namespace: honda-test
           replicas: 1
           db_service_name: axelor-postgres-db
+
+services:
+  - name: honda-lde-webapp-db
+    namespace: honda-dev
+    ports:
+      - name: honda-lde-webapp-db
+        protocol: TCP
+        port: 5432
+        targetPort: 5432
+    type: ClusterIP

@@ -1,36 +1,31 @@
  # Declare variables to be passed into your templates.
 
-app_name: honda-lde-webapp
+
 deploymentconfigs:
   - namespace: honda-dev
+    name: honda-lde-webapp
     replicas: 1
-    db_service_name: axelor-postgres-db
     env_vars:
-      - name: "DC_POSTGRESQL_DB"
+      - name: "DB_NAME"
         valueFrom:
          secretKeyRef:
            name: honda-lde-webapp-creds
            key: database-name
-      - name: "DC_POSTGRESQL_USER"
+      - name: "DB_USER"
         valueFrom:
           secretKeyRef:
             name: "honda-lde-webapp-creds"
             key: database-user
-      - name: "DC_POSTGRESQL_PWD"
+      - name: "DB_PASS"
         valueFrom:
           secretKeyRef:
             name: "honda-lde-webapp-creds"
             key: database-password
-      - name: SPRING_APPLICATION_JSON
-        value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
-      - name: DCDBPOSTGRESQL_SERVICE_HOST
-        value: "axelor-service-db"
+      - name: DB_SERVICE_NAME
+        value: "honda-lde-webapp-db"
     ports:
         - containerPort: 8080
           name: http
-          protocol: TCP
-        - containerPort: 8081
-          name: 8081i
           protocol: TCP
     image_version: "latest"
   - namespace: honda-dev
@@ -58,4 +53,5 @@ deploymentconfigs:
       - containerPort: 5432
         protocol: TCP
         name: pg
-    image_version: "latest"
+    image: "postgresql"
+    image_version: "10"

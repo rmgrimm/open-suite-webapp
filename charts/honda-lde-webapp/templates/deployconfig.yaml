@@ -1,62 +1,46 @@
 {{- if .Values.deploymentconfigs }}
-{{- range .Values.deploymentconfigs }}
+{{- range $dc := .Values.deploymentconfigs }}
 ---
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  name: {{ $.Values.app_name }}
-  namespace: "{{ .namespace }}"
+  name: {{ $dc.name }}
+  namespace: "{{ $dc.namespace }}"
 spec:
-  replicas: {{ .replicas | default "1" }}
+  replicas: {{ $dc.replicas | default "1" }}
   selector:
-    deploymentConfig: "{{ $.Values.app_name }}"
+    deploymentConfig: "{{ $dc.name }}"
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        deploymentConfig: "{{ $.Values.app_name }}"
-      name: "{{ $.Values.app_name }}"
+        deploymentConfig: "{{ $dc.name }}"
+      name: "{{ $dc.name }}"
     spec:
       containers:
       - env:
-        - name: DCDBPOSTGRESQL_SERVICE_HOST
-          value: "{{ .db_service_name }}"
-        - name: "DC_POSTGRESQL_DB"
-          valueFrom:
-            secretKeyRef:
-              name: "{{ $.Values.app_name }}-db-creds"
-              key: database-name
-        - name: "DC_POSTGRESQL_USER"
-          valueFrom:
-            secretKeyRef:
-              name: "{{ $.Values.app_name }}-db-creds"
-              key: database-user
-        - name: "DC_POSTGRESQL_PW"
-          valueFrom:
-            secretKeyRef:
-              name: "{{ $.Values.app_name }}-db-creds"
-              key: database-password
-        image: "{{ $.Values.app_name }}"
+{{ toYaml $dc.env_vars | indent 8 }}
+        image: {{ $dc.image | default $dc.name }}:{{ $dc.image_version }}
         imagePullPolicy: Always
-        name: "{{ $.Values.app_name }}"
+        name: "{{ $dc.name }}"
         ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        - containerPort: 8081
-          name: mgmt
-          protocol: TCP
+{{- range $ports := $dc.ports }}
+          - name: {{ $ports.name }}
+            containerPort: {{ $ports.containerPort }}
+            protocol: {{ $ports.protocol }}
+{{- end }}
       terminationGracePeriodSeconds: 60
   triggers:
   - imageChangeParams:
       automatic: true
       containerNames:
-      - "{{ $.Values.app_name }}"
+      - "{{ $dc.name }}"
       from:
         kind: ImageStreamTag
-        name: "{{ $.Values.app_name }}:latest"
+        name: "{{ $dc.name }}:{{ $dc.image_version }}"
     type: ImageChange
   - type: ConfigChange
 {{- end }}
 {{- end }}
+
