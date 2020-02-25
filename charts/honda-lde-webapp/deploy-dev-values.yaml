@@ -9,17 +9,17 @@ deploymentconfigs:
       - name: "DB_NAME"
         valueFrom:
          secretKeyRef:
-           name: honda-lde-webapp-creds
+           name: honda-lde-webapp-db-creds
            key: database-name
       - name: "DB_USER"
         valueFrom:
           secretKeyRef:
-            name: "honda-lde-webapp-creds"
+            name: "honda-lde-webapp-db-creds"
             key: database-user
       - name: "DB_PASS"
         valueFrom:
           secretKeyRef:
-            name: "honda-lde-webapp-creds"
+            name: "honda-lde-webapp-db-creds"
             key: database-password
       - name: DB_SERVICE_NAME
         value: "honda-lde-webapp-db"
@@ -37,17 +37,17 @@ deploymentconfigs:
       - name: POSTGRESQL_USER
         valueFrom:
           secretKeyRef:
-            name: honda-lde-webapp-creds
+            name: honda-lde-webapp-db-creds
             key: database-user
       - name: POSTGRESQL_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: honda-lde-webapp-creds
+            name: honda-lde-webapp-db-creds
             key: database-password
       - name: POSTGRESQL_DATABASE
         valueFrom:
           secretKeyRef:
-            name: honda-lde-webapp-creds
+            name: honda-lde-webapp-db-creds
             key: database-name
     ports:
       - containerPort: 5432
