@@ -46,7 +46,7 @@ deploymentconfigs:
         persistentVolumeClaim:
           claimName: "honda-lde-webapp-data"
     image_version: "10"
-    image_name: "postgresql"
+    image_name: "image-registry.openshift-image-registry.svc:5000/openshift/postgresql"
   - namespace: honda-dev
     name: honda-lde-webapp
     replicas: 1
