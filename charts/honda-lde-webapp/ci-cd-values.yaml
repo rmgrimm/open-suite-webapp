@@ -20,6 +20,7 @@ pipelines:
     secret_name: "github-auth"
     trigger_type: "General"
     source_repo: "https://github.com/honda-lde/open-suite-webapp"
+    source_repo_ref: "pipelines"
 
 argodeploys:
   - env: dev
