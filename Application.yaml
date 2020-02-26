@@ -15,6 +15,6 @@ spec:
       releaseName: open-suite-webapp
       valueFiles:
       - bootstrap-values.yaml
-    path: charts/open-suite-webapp
-    repoURL: git@github.com:honda-lde/open-suite-webapp.git
-    targetRevision: pipelines 
+    path: charts/honda-lde-webapp
+    repoURL: https://github.com:honda-lde/open-suite-webapp.git
+    targetRevision: pipelines
