@@ -38,12 +38,15 @@ pipeline {
     }
 
     stage('Sync changes to Dev'){
-      agent { label 'jenkins-slave-gradle' }
+      agent { label 'jenkins-slave-argocd' }
       steps {
-	  sh 'cd charts/${APP_NAME} && helm template . -f deploy-dev-values.yaml | oc apply -n ${DEV} -f -'
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'honda-labs-ci-cd-argo-auth', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]){
+            sh 'argocd login argo-cd-argocd-server-honda-labs-ci-cd.apps.honda-lde.rht-labs.com:443 --grpc-web --config /tmp/.argo --username $USERNAME --password $PASSWORD'
+            sh 'argocd app sync ${APP_NAME}-dev --config /tmp/.argo'
         }
-      }
 
+      }
+    }
 
     stage('Deploy to Dev'){
       steps {
