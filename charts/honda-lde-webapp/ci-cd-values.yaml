@@ -12,8 +12,8 @@ builds:
     trigger_type: "General"
     source_repo: "https://github.com/honda-lde/open-suite-webapp.git"
     source_repo_ref: "pipelines"
-    builder_image_name: "java"
-    builder_image_tag: "8"
+    builder_image_name: "jboss-webserver31-tomcat8-openshift"
+    builder_image_tag: "1.4"
 
 pipelines:
   - name: "honda-lde-webapp"
