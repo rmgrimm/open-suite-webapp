@@ -5,7 +5,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ $svc.name }}
-  namespace: {{ $svc.namespace }}
+  namespace: {{ $svc.namespace | default $.Values.namespace | quote }}
 spec:
   ports:
 {{- range $port := $svc.ports }}
@@ -23,3 +23,4 @@ status:
   loadBalancer: {}
 {{- end }}
 {{- end }}
+

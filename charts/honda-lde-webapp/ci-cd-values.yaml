@@ -1,0 +1,36 @@
+app_name: "honda-lde-webapp"
+namespace: "honda-labs-ci-cd"
+dev_namespace: "honda-dev"
+test_namespace: "honda-test"
+
+imagestreams:
+  - name: honda-lde-webapp
+
+builds:
+  - name: "honda-lde-webapp"
+    secret_name: "github-auth"
+    trigger_type: "General"
+    source_repo: "https://github.com/honda-lde/open-suite-webapp.git"
+    source_repo_ref: "pipelines"
+    builder_image_name: "java"
+    builder_image_tag: "8"
+
+pipelines:
+  - name: "honda-lde-webapp"
+    secret_name: "github-auth"
+    trigger_type: "General"
+    source_repo: "https://github.com/honda-lde/open-suite-webapp"
+
+argodeploys:
+  - env: dev
+    repoUrl: https://github.com/honda-lde/open-suite-webapp.git
+    path: "charts/honda-lde-webapp"
+    namespace: honda-dev
+    targetRevision: pipelines
+    valueFile: dev-values.yaml
+  - env: test
+    repoUrl: https://github.com/honda-lde/open-suite-webapp.git
+    path: "charts/honda-lde-webapp"
+    namespace: honda-test
+    targetRevision: pipelines
+    valueFile: test-values.yaml

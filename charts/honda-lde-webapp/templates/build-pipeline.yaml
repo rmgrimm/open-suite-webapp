@@ -33,3 +33,42 @@ spec:
 status:
   lastVersion: 0
 {{- end }}
+
+{{- if .Values.pipelines }}
+{{- range .Values.pipelines }}
+---
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
+metadata:
+  name: "{{ .name }}-pipeline"
+  namespace: {{ .namespace | default $.Values.namespace | quote }}
+spec:
+  nodeSelector: {}
+  source:
+    type: Git
+    sourceSecret:
+      name: "{{ .secret_name }}"
+    git:
+      uri: "{{ .source_repo }}"
+      ref: {{ .source_repo_ref | default "master" | quote }}
+    contextDir: {{ .source_context_dir | default "" | quote }}
+  triggers:
+  - type: "{{ .trigger_type }}"
+    {{ .trigger_type | lower }}:
+      secret: {{ .secret_name }}
+  - type: "ConfigChange"
+  strategy:
+    type: "JenkinsPipeline"
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: {{ .pipeline_script | default "Jenkinsfile" | quote }}
+      env:
+        - name: APP_NAME
+          value: "{{ $.Values.app_name }}"
+        - name: DEV
+          value: "{{ $.Values.dev_namespace }}"
+        - name: TEST
+          value: "{{ $.Values.test_namespace }}"
+status:
+  lastVersion: 0
+{{- end }}
+{{- end }}

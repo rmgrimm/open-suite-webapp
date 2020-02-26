@@ -7,7 +7,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   name: {{ $.Values.app_name }}-{{ .env }}
-  namespace: {{ $.Values.cicd_namespace }}
+  namespace: {{ $.Values.namespace }}
 spec:
   destination:
     namespace: {{ .namespace }}
@@ -16,9 +16,11 @@ spec:
   source:
     helm:
       releaseName: {{ .releasename | default $.Values.app_name }}
-      values: {{- toYaml .values | indent 6 }}
-    path: charts/{{ $.Values.app_name }}
+      valueFiles: 
+      - {{ .valueFile }}
+    path: {{ .path }} 
     repoURL: {{ .repoUrl }}
     targetRevision: {{ .targetRevision | default "master" }}
 {{- end }}
 {{- end }}
+

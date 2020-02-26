@@ -4,8 +4,9 @@
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
-  name: "{{ $.Values.app_name }}" 
-  namespace: "{{ .namespace }}"
+  name: "{{ .name }}"
+  namespace: {{ .namespace | default $.Values.namespace | quote }}
 spec: {}
 {{- end }}
 {{- end }}
+

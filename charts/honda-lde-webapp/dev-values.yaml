@@ -1,0 +1,75 @@
+app_name: "honda-lde-webapp"
+namespace: "honda-dev"
+
+imagestreams:
+  - name: honda-lde-webapp
+
+services:
+  - name: honda-lde-webapp-db
+    ports:
+      - name: honda-lde-webapp-db
+        protocol: TCP
+        port: 5432
+        targetPort: 5432
+    type: ClusterIP 
+
+deploymentconfigs:
+  - name: honda-lde-webapp-db
+    replicas: 1
+    env_vars:
+      - name: PGCTLTIMEOUT
+        value: "300"
+      - name: POSTGRESQL_USER
+        valueFrom:
+          secretKeyRef:
+            name: honda-lde-webapp-db-creds
+            key: database-user
+      - name: POSTGRESQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: honda-lde-webapp-db-creds
+            key: database-password
+      - name: POSTGRESQL_DATABASE
+        valueFrom:
+          secretKeyRef:
+            name: honda-lde-webapp-db-creds
+            key: database-name
+    ports:
+      - containerPort: 5432
+        protocol: TCP
+        name: pg
+    volume_mounts:
+      - name: "honda-lde-webapp-data"
+        mountPath: "/var/lib/pgsql/data"
+    volumes:
+      - name: "honda-lde-webapp-data"
+        persistentVolumeClaim:
+          claimName: "honda-lde-webapp-data"
+    image_version: "10"
+    image_name: "postgresql"
+  - namespace: honda-dev
+    name: honda-lde-webapp
+    replicas: 1
+    env_vars:
+      - name: "DB_NAME"
+        valueFrom:
+         secretKeyRef:
+           name: honda-lde-webapp-db-creds
+           key: database-name
+      - name: "DB_USER"
+        valueFrom:
+          secretKeyRef:
+            name: "honda-lde-webapp-db-creds"
+            key: database-user
+      - name: "DB_PASS"
+        valueFrom:
+          secretKeyRef:
+            name: "honda-lde-webapp-db-creds"
+            key: database-password
+      - name: DB_SERVICE_NAME
+        value: "honda-lde-webapp-db"
+    ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+    image_version: "latest"  
