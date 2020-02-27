@@ -79,3 +79,15 @@ task archiveReports(type: Zip) {
 }
 
 build.finalizedBy archiveReports
+
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.bazlur.app'
+// artifactId is taken by default, from folder name
+version = '0.1-SNAPSHOT'
+
+dependencies {
+compile 'commons-lang:commons-lang:2.3'
+}
